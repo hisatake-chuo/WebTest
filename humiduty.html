@@ -70,7 +70,7 @@ async function readData(){
                 var tmp = humidityBody - humidityOutside;
                 tmp = tmp > 0 ? tmp : 0;
                 discomfort = discomfort*alpha + tmp*beta;
-                if (discomfort > 0.0) {
+                if (discomfort >= 0.0) {
 			if (navigator.geolocation) {
                         	navigator.geolocation.getCurrentPosition(getposCB);
 			}
