@@ -22,6 +22,8 @@ var readEnable;
 const server = "https://5a710abc.ngrok.io";
 
 const socket = io(server);
+	
+var humidity = 0.0;
 
 async function connect(){
 	microBitBle = await microBitBleFactory.connect();
@@ -40,13 +42,14 @@ async function disconnect(){
 	msg.innerHTML=("micro:bit BLE接続を切断しました。");
 }
 
-async function sendStatus(humidity, lon, lat) {
+async function sendStatus(humidity, lon, lat, time) {
 //socket.emit("test", "test");
 socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
 }
 
 async function getposCB(position) {
         console.log("lat: ", postion.coords.lat, " lon: ", postion.coords.lon);
+	sendStatus(humidity, postion.coords.lat, postion.coords.lon);
 }
 
 async function readData(){
@@ -59,20 +62,21 @@ async function readData(){
         var beta = 1;
         const TRESHOLD = 100;
 	while ( readEnable ){
-valBody = await bme280.readData();
-msg.innerHTML= valBody.temperature + "℃ " + valBody.pressure + "hPa " +  valBody.humidity + "%";
+                valBody = await bme280.readData();
+		msg.innerHTML= valBody.temperature + "℃ " + valBody.pressure + "hPa " +  valBody.humidity + "%";
 		//console.log('readVal:', readVal);
                 humidityBody = valBody.humidity;
+		humidity = humidityBody;
                 var tmp = humidityBody - humidityOutside;
                 tmp = tmp > 0 ? tmp : 0;
                 discomfort = discomfort*alpha + tmp*beta;
                 if (discomfort > 0.0) {
-                        sendStatus(50, 10, 10);
+			if (navigator.geolocation) {
+                        	navigator.geolocation.getCurrentPosition(getposCB);
+			}
                         console.log('discomfort!!');
                 }
-                if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(getposCB);
-                }
+                
 		await sleep(1000);
 	}
 }
