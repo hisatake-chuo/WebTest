@@ -46,7 +46,7 @@ socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
 }
 
 async function getposCB(position) {
-        //console.log("lat: ", postion.coords.lat, " lon: ", postion.coords.lon);
+        console.log("lat: ", postion.coords.lat, " lon: ", postion.coords.lon);
 }
 
 async function readData(){
@@ -70,9 +70,9 @@ msg.innerHTML= valBody.temperature + "℃ " + valBody.pressure + "hPa " +  valBo
                         sendStatus(50, 10, 10);
                         console.log('discomfort!!');
                 }
-                /*if (navigator.geolocation) {
+                if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(getposCB);
-                }*/
+                }
 		await sleep(1000);
 	}
 }
