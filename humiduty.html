@@ -48,8 +48,8 @@ socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
 }
 
 async function getposCB(position) {
-        console.log("lat: ", postion.coords.lat, " lon: ", postion.coords.lon);
-	sendStatus(humidity, postion.coords.lat, postion.coords.lon);
+        console.log("lat: ", position.coords.lat, " lon: ", position.coords.lon);
+	sendStatus(humidity, position.coords.lat, position.coords.lon);
 }
 
 async function readData(){
