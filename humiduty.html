@@ -63,8 +63,8 @@ async function readData(){
     var discomfort = 0.0;
     var alpha = 0.8;
     var beta = 1;
-    const SUM_TRESHOLD = 5;
-    const DIFF_TRESHOLD = 15;
+    const SUM_TRESHOLD = -100;
+    const DIFF_TRESHOLD = -100;
 
 	while ( readEnable ){
         valBody = await bme280_body.readData();
