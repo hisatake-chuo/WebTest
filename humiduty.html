@@ -73,7 +73,7 @@ async function readData(){
 		//console.log('readVal:', readVal);
         humidityBody = valBody.humidity;
         humidityOutside = valOutside.humidity;
-	console.log("out: ", humidityOutside, " body: ", humidutyBody);
+	console.log("out: ", humidityOutside, " body: ", humidityBody);
 		humidity = humidityBody;
         var tmp = humidityBody - humidityOutside;
         tmp = tmp >= DIFF_TRESHOLD ? tmp : 0;
