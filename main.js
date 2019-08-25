@@ -44,8 +44,9 @@ async function readData() {
   var discomfort = 0.0;
   var alpha = 0.9;
   var beta = 1;
-  const SUM_TRESHOLD = 15;
+  const SUM_TRESHOLD = 70;
   const DIFF_TRESHOLD = 15;
+  const MAX_DISCOM = 100;
   let counter = 0;
   while (readEnable) {
     try {
@@ -70,6 +71,7 @@ async function readData() {
     var tmp = humidityBody - humidityOutside;
     tmp = tmp >= DIFF_TRESHOLD ? tmp : 0;
     discomfort = discomfort * alpha + tmp * beta;
+    if (discomfort > MAX_DISCOM) discomfort = MAX_DISCOM;
     if (discomfort >= SUM_TRESHOLD) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getposCB);
