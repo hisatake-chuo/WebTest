@@ -1,0 +1,7 @@
+{
+  "name": "webtest",
+  "version": "0.1.0",
+  "dependencies": {
+    "@chirimen-raspi/chirimen-driver-i2c-bme280": "^1.0.0"
+  }
+}
