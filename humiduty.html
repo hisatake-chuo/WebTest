@@ -15,7 +15,9 @@
 <script>
 var microBitBle;
 
-var bme280;
+var bme280_body;
+	
+var bme280_outside;
 
 var readEnable;
 
@@ -30,8 +32,10 @@ async function connect(){
 	msg.innerHTML=("micro:bit BLE接続しました。");
 	var i2cAccess = await microBitBle.requestI2CAccess();
 	var i2cPort = i2cAccess.ports.get(1);
-	bme280 = new BME280(i2cPort, 0x76);
-	await bme280.init();
+	bme280_body = new BME280(i2cPort, 0x76);
+	bme280_outside = new BME280(i2cPort, 0x77);
+	await bme280_body.init();
+	await bme280_outside.init();
 	readEnable = true;
 	readData();
 }
@@ -43,39 +47,42 @@ async function disconnect(){
 }
 
 async function sendStatus(humidity, lon, lat, time) {
-//socket.emit("test", "test");
-socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
+	socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
 }
 
 async function getposCB(position) {
-        console.log("lat: ", position.coords.latitude, " lon: ", position.coords.longitude);
+    console.log("lat: ", position.coords.latitude, " lon: ", position.coords.longitude);
 	sendStatus(humidity, position.coords.longitude, position.coords.latitude);
 }
 
 async function readData(){
-        var valBody;
-        var humidityBody;
-        var valOutside;
-        var humidityOutside = 50.0;
-        var discomfort = 0.0;
-        var alpha = 0.8;
-        var beta = 1;
-        const TRESHOLD = 100;
+    var valBody;
+    var humidityBody = 50.0;
+    var valOutside;
+    var humidityOutside = 50.0;
+    var discomfort = 0.0;
+    var alpha = 0.8;
+    var beta = 1;
+    const SUM_TRESHOLD = 100;
+    const DIFF_TRESHOLD = 10;
+
 	while ( readEnable ){
-                valBody = await bme280.readData();
+        valBody = await bme280_body.readData();
+        valOutside = await bme280_outside.readData();
 		msg.innerHTML= valBody.temperature + "℃ " + valBody.pressure + "hPa " +  valBody.humidity + "%";
 		//console.log('readVal:', readVal);
-                humidityBody = valBody.humidity;
+        humidityBody = valBody.humidity;
+        humidityOutside = valOutside.humidity;
 		humidity = humidityBody;
-                var tmp = humidityBody - humidityOutside;
-                tmp = tmp > 0 ? tmp : 0;
-                discomfort = discomfort*alpha + tmp*beta;
-                if (discomfort >= 0.0) {
+        var tmp = humidityBody - humidityOutside;
+        tmp = tmp >= DIFF_TRESHOLD ? tmp : 0;
+        discomfort = discomfort*alpha + tmp*beta;
+        if (discomfort >= SUM_TRESHOLD) {
 			if (navigator.geolocation) {
-                        	navigator.geolocation.getCurrentPosition(getposCB);
+                navigator.geolocation.getCurrentPosition(getposCB);
 			}
-                        console.log('discomfort!!');
-                }
+            console.log('discomfort!!');
+        }
                 
 		await sleep(1000);
 	}
