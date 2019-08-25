@@ -45,7 +45,7 @@ async function readData() {
   var alpha = 0.9;
   var beta = 1;
   const SUM_TRESHOLD = 15;
-  const DIFF_TRESHOLD = 70;
+  const DIFF_TRESHOLD = 15;
   let counter = 0;
   while (readEnable) {
     try {
