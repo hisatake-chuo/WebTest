@@ -47,7 +47,7 @@ async function disconnect(){
 }
 
 async function sendStatus(humidity, lon, lat, time) {
-	socket.emit("test", {"humidity":humidity,"longitude":lon,"latitude":lat});
+	socket.emit("send", {"humidity":humidity,"longitude":lon,"latitude":lat});
 }
 
 async function getposCB(position) {
