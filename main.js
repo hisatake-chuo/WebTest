@@ -3,7 +3,7 @@ var bme280_body;
 
 var bme280_outside;
 var readEnable;
-const server = "https://8120ab16.ngrok.io";
+const server = "https://a69da83c.ngrok.io";
 const socket = io(server);
 
 var humidity = 0.0;
