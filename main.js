@@ -47,8 +47,13 @@ async function readData() {
   const SUM_TRESHOLD = -100;
   const DIFF_TRESHOLD = -100;
   while (readEnable) {
-    valBody = await bme280_body.readData();
-    //valOutside = await bme280_outside.readData();
+    try {
+      valBody = await bme280_body.readData();
+      //valOutside = await bme280_outside.readData();
+    } catch (error) {
+      console.error(error);
+    }
+
     msg.innerHTML =
       valBody.temperature +
       "℃ " +
