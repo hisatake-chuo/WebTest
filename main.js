@@ -13,9 +13,9 @@ async function connect() {
   var i2cAccess = await microBitBle.requestI2CAccess();
   var i2cPort = i2cAccess.ports.get(1);
   bme280_body = new BME280(i2cPort, 0x76);
-  //bme280_outside = new BME280(i2cPort, 0x77);
+  bme280_outside = new BME280(i2cPort, 0x77);
   await bme280_body.init();
-  //await bme280_outside.init();
+  await bme280_outside.init();
   readEnable = true;
   readData();
 }
@@ -46,10 +46,11 @@ async function readData() {
   var beta = 1;
   const SUM_TRESHOLD = -100;
   const DIFF_TRESHOLD = -100;
+  let counter = 0;
   while (readEnable) {
     try {
       valBody = await bme280_body.readData();
-      //valOutside = await bme280_outside.readData();
+      valOutside = await bme280_outside.readData();
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +64,7 @@ async function readData() {
       "%";
     //console.log('readVal:', readVal);
     humidityBody = valBody.humidity;
-    //humidityOutside = valOutside.humidity;
+    humidityOutside = valOutside.humidity;
     console.log("out: ", humidityOutside, " body: ", humidityBody);
     humidity = humidityBody;
     var tmp = humidityBody - humidityOutside;
@@ -76,7 +77,8 @@ async function readData() {
       console.log("discomfort!!");
     }
 
-    await sleep(1000);
+    console.log("loop count: ", counter++);
+    await sleep(2000);
   }
   console.log("fin");
 }
