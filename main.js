@@ -42,7 +42,7 @@ async function readData() {
   var valOutside;
   var humidityOutside = 50.0;
   var discomfort = 0.0;
-  var alpha = 0.8;
+  var alpha = 0.9;
   var beta = 1;
   const SUM_TRESHOLD = 15;
   const DIFF_TRESHOLD = 70;
