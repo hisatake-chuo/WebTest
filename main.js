@@ -75,6 +75,7 @@ async function readData() {
         navigator.geolocation.getCurrentPosition(getposCB);
       }
       console.log("discomfort!!");
+      msg.innerHTML = "送ったで";
     }
 
     console.log("loop count: ", counter++);
