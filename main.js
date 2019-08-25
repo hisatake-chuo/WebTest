@@ -26,6 +26,7 @@ async function disconnect() {
 }
 async function sendStatus(humidity, lon, lat, time) {
   socket.emit("send", { humidity: humidity, longitude: lon, latitude: lat });
+  msg.innerHTML = "送ったで";
 }
 async function getposCB(position) {
   console.log(
@@ -77,7 +78,6 @@ async function readData() {
         navigator.geolocation.getCurrentPosition(getposCB);
       }
       console.log("discomfort!!");
-      msg.innerHTML = "送ったで";
     }
 
     console.log("loop count: ", counter++);
